@@ -1,10 +1,7 @@
-import { test, expect } from '@playwright/test';
-import { ApiClient } from '../../src/clients/api-client';
+import { test, expect } from '../../src/fixtures/api.fixture';
 import { UserResponse } from '../../src/types/user.types';
 
-test('GET existing user returns 200', async ({ request }) => {
-  const api = new ApiClient(request);
-
+test('GET existing user returns 200', async ({ api }) => {
   const response = await api.get('/users/1');
 
   expect(response.status()).toBe(200);
@@ -16,9 +13,7 @@ test('GET existing user returns 200', async ({ request }) => {
   expect(body.email).toBeTruthy();
 });
 
-test('GET non-existing user returns 404', async ({ request }) => {
-  const api = new ApiClient(request);
-
+test('GET non-existing user returns 404', async ({ api }) => {
   const response = await api.get('/users/999');
 
   expect(response.status()).toBe(404);

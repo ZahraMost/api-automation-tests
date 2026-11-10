@@ -1,10 +1,7 @@
-import { test, expect } from '@playwright/test';
-import { ApiClient } from '../../src/clients/api-client';
+import { test, expect } from '../../src/fixtures/api.fixture';
 import { UserResponse } from '../../src/types/user.types';
 
-test('PUT updates an existing user', async ({ request }) => {
-  const api = new ApiClient(request);
-
+test('PUT updates an existing user', async ({ api }) => {
   const updatedUser = {
     name: 'Updated User',
     username: 'updateduser',
