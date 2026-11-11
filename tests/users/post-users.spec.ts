@@ -1,19 +1,27 @@
 import { test, expect } from '../../src/fixtures/api.fixture';
-import { validUser, incompleteUser } from '../../src/data/user.data';
+import {
+  validUser,
+  additionalValidUsers,
+  incompleteUser,
+} from '../../src/data/user.data';
 import { UserResponse } from '../../src/types/user.types';
 
-test('POST creates a new user', async ({ api }) => {
-  const response = await api.post('/users', validUser);
+const validUsers = [validUser, ...additionalValidUsers];
 
-  expect(response.status()).toBe(201);
+for (const user of validUsers) {
+  test(`POST creates a new user: ${user.username}`, async ({ api }) => {
+    const response = await api.post('/users', user);
 
-  const body = await response.json() as UserResponse;
+    expect(response.status()).toBe(201);
 
-  expect(body.name).toBe(validUser.name);
-  expect(body.username).toBe(validUser.username);
-  expect(body.email).toBe(validUser.email);
-  expect(body.id).toBeTruthy();
-});
+    const body = await response.json() as UserResponse;
+
+    expect(body.name).toBe(user.name);
+    expect(body.username).toBe(user.username);
+    expect(body.email).toBe(user.email);
+    expect(body.id).toBeTruthy();
+  });
+}
 
 test('POST with incomplete data returns 201', async ({ api }) => {
   const response = await api.post('/users', incompleteUser);
