@@ -1,5 +1,5 @@
 import { test, expect } from '../../src/fixtures/api.fixture';
-import { UserResponse } from '../../src/types/user.types';
+import { userSchema } from '../../src/schemas/user.schema';
 
 test('PUT updates an existing user', async ({ api }) => {
   const updatedUser = {
@@ -12,7 +12,14 @@ test('PUT updates an existing user', async ({ api }) => {
 
   expect(response.status()).toBe(200);
 
-  const body = await response.json() as UserResponse;
+  const body = await response.json();
+
+  const validationResult = userSchema.safeParse(body);
+
+  expect(
+    validationResult.success,
+    JSON.stringify(validationResult.error?.issues, null, 2)
+  ).toBe(true);
 
   expect(body.id).toBe(1);
   expect(body.name).toBe(updatedUser.name);
